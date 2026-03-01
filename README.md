@@ -49,9 +49,9 @@ python bem_rcs.py sphere.stl --map --theta-res 91 --phi-res 91 --save map.npz
 
 ```bash
 # Plot saved RCS data
-python plot_bem_rcs.py --input cut.npz --output plots/
-python plot_bem_rcs.py --input map.npz --output plots/
-python plot_bem_rcs.py --input single.npz --output plots/
+python plot_rcs.py --input cut.npz --output plots/
+python plot_rcs.py --input map.npz --output plots/
+python plot_rcs.py --input single.npz --output plots/
 ```
 
 ## Available Scripts
@@ -62,7 +62,8 @@ python plot_bem_rcs.py --input single.npz --output plots/
 | `plot_stl.py` | Visualize STL mesh |
 | `read_stl.py` | Show STL info (triangles, area) |
 | `bem_rcs.py` | Compute RCS (fast BEM) |
-| `plot_bem_rcs.py` | Plot RCS results |
+| `compute_rcs.py` | Compute RCS (Physical Optics) |
+| `plot_rcs.py` | Plot RCS results |
 
 ## Examples
 
@@ -79,14 +80,22 @@ python plot_stl.py sphere.stl sphere.png
 python bem_rcs.py sphere.stl --cut --save rcs.npz
 
 # 4. Plot
-python plot_bem_rcs.py --input rcs.npz --output plots/
+python plot_rcs.py --input rcs.npz --output plots/
 ```
 
 ### Full 2D Map
 
 ```bash
 python bem_rcs.py sphere.stl --map --theta-res 91 --phi-res 91 --save rcs_map.npz
-python plot_bem_rcs.py --input rcs_map.npz --output plots/
+python plot_rcs.py --input rcs_map.npz --output plots/
+```
+
+### Delta Wing
+
+```bash
+python nurbs_to_stl.py --shape delta_wing -o wing.stl
+python bem_rcs.py wing.stl --cut --save rcs.npz
+python plot_rcs.py --input rcs.npz --output plots/
 ```
 
 ## Output Files
@@ -105,11 +114,15 @@ python plot_bem_rcs.py --input rcs_map.npz --output plots/
 
 ### nurbs_to_stl.py
 ```
---shape [sphere|cylinder|cone|torus|box|wave]
---radius R          # radius (default 0.5)
---height H          # height (default 1.0)
---samples N         # resolution (default 40)
---output FILE       # output STL
+--shape [sphere|cylinder|cone|torus|box|wave|delta_wing]
+--length L           # delta wing length (default 2.0)
+--span S             # delta wing span (default 1.5)
+--thickness T        # delta wing thickness (default 0.2)
+--sections N         # number of sections (default 8)
+--radius R           # radius (default 0.5)
+--height H           # height (default 1.0)
+--samples N          # resolution (default 40)
+--output FILE        # output STL
 ```
 
 ### bem_rcs.py
@@ -123,7 +136,7 @@ stl_file             # input STL
 --save FILE          # save to .npz
 ```
 
-### plot_bem_rcs.py
+### plot_rcs.py
 ```
 --input FILE         # input .npz
 --output DIR         # output directory
